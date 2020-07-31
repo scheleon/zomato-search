@@ -18,14 +18,14 @@ app.get('/restaurants', async (req, res) => {
     cuisines = req.query.cuisines
     city = req.query.city
     max_for_two = req.query.max_for_two
-    def = 1e9 + 7
+    def = 100000007
     
-    if(cuisines == null || cuisines == undefined || cuisines == '' || cuisines == '*'){
-        cuisines = 'empty'
+    if(cuisines == '' || cuisines == '*'){
+        cuisines = undefined
     }
 
-    if(max_for_two == null || max_for_two == undefined || max_for_two == '' || max_for_two < 0){
-        max_for_two = def
+    if(max_for_two == '' || max_for_two < 0){
+        max_for_two = undefined
     }
 
     // console.log(city, cuisines, max_for_two)
