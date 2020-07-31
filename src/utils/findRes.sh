@@ -14,7 +14,7 @@ entity_id=""
 cuisines=""
 
 city="$1"
-length=$(echo $city | grep -oE "^[a-zA-Z0-9 ,.]+$")
+length=$(echo $city | grep -oE "^[a-zA-Z0-9 ,-_.]+$")
 if [[ ${#length} -lt 1 ]]; then
 	echo "{\"error\": \"No restaurants found\"}"  
 	exit 1
@@ -45,7 +45,7 @@ else
 fi
 
 # Search for cuisine id
-if [[ $cuisines != "null" ]]; then
+if [[ $cuisines != "empty" ]]; then
 	IFS=',' read -r -a cuisines_list <<< "${cuisines}"
 
 	cuisines_details=$(curl -G -X GET --header \

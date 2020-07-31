@@ -15,14 +15,6 @@ async function find(city, cuisines, max_for_two, res) {
     );
     
     const errorResponse="{\"error\": \"Cannot find any restaurants matching your preference\"}"        
-
-    child.stderr.on('data', (data) => {
-        // console.error(`stderr: ${data}`);
-        if(!res._headerSent){
-            res.status(404).send(JSON.parse(errorResponse))
-            res.end()
-        }
-    });
     
     child.on('close', (code) => {
         if(code != 0 && !res._headerSent){
@@ -34,6 +26,14 @@ async function find(city, cuisines, max_for_two, res) {
     child.stdout.on('data', (data) => {
         if(!res._headerSent){
             res.send(JSON.parse(data.toString()))
+            res.end()
+        }
+    });
+
+    child.stderr.on('data', (data) => {
+        // console.error("error", data);
+        if(!res._headerSent){
+            res.status(404).send(JSON.parse(errorResponse))
             res.end()
         }
     });
