@@ -1,7 +1,7 @@
 var form = document.getElementById("search-form");
 function handleForm(event) { event.preventDefault(); } 
 form.addEventListener('submit', handleForm);
-result
+
 function formTable(data, div) {
     var html = '<table class="table" id="restaurants">'
     html += '<tr>'
@@ -22,7 +22,7 @@ function formTable(data, div) {
     }
 
     html += '</table>'
-    console.log(html)
+    // console.log(html)
     div.innerHTML = html
 }
 
@@ -41,17 +41,16 @@ document.getElementById("find").addEventListener("click", async function(){
 
     let response = await fetch(url);
 
-    if (response.ok) { // if HTTP-status is 200-299
-    // get the response body (the method explained below)
+    if (response.ok) { 
+        
         let json = await response.json();
-        if(json.error){
-            alert("Error: " + json.error)
-            return
-        }
-        result = json
-        formTable(json, document.getElementById('result'))
+        
+        result_box = document.getElementById('result')
+        formTable(json, result_box)
+        document.getElementById('result').scrollIntoView(false)
     } else {
-        alert("HTTP-Error: " + response.status)
+        let json = await response.json()
+        alert("Error: " + json.error);
     }
 })
 

@@ -1,23 +1,18 @@
 const express = require('express')
-const find = require('./find')
-const fs = require('fs')
+const path = require('path')
+const find = require('./scripts/find')
 
-const port = 4478
+const port = process.env.PORT || 4478
 
 const app = express()
 
+const publicDirectoryPath = path.join(__dirname, '../public')
+
+app.use(express.static(publicDirectoryPath))
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.htm')
-})
-
-app.get('/script.js', (req, res) =>{
-    res.sendFile(__dirname + '/script.js')
-})
-
-app.get('/styles.css', (req, res) =>{
-    res.sendFile(__dirname + '/styles.css')
+app.get('', (req, res) => {
+    res.sendFile(`${publicDirectoryPath}/index.htm`)
 })
 
 app.get('/restaurants', async (req, res) => {

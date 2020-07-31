@@ -1,6 +1,12 @@
 #!/bin/bash
 
-user_key="34e6c6f8c0f1539e21225653c9bd1ac0"
+if [[ $# -lt 4 ]]; then
+	# echo "USAGE: ./findRes.sh [city] [cuisines separated by comma(,)] [Max cost for two] [Zomato api key]"
+	echo "{\"error\": \"No restaurants found\"}"
+	exit 1
+fi
+
+user_key="$4"
 
 cuisines_id="*"
 entity_type="city"
@@ -40,13 +46,32 @@ fi
 
 # Search for cuisine id
 if [[ $cuisines != "null" ]]; then
+	IFS=',' read -r -a cuisines_list <<< "${cuisines}"
 
 	cuisines_details=$(curl -G -X GET --header \
 		"Accept: application/json" \
 		--header "user-key: $user_key" \
 		--data-urlencode "city_id=$entity_id" \
 		"https://developers.zomato.com/api/v2.1/cuisines" 2> /dev/null)
-	cuisines=$(echo "$cuisines_details" | jq ".cuisines[] | select(.cuisine.cuisine_name | test(\"${cuisines}\")) | .cuisine.cuisine_id" | head -n 1)
+	cuisines=""
+	for cuisine_item in "${cuisines_list[@]}"
+	do
+		# Trimming leading and trailing whitespaces
+		cuisine_item="$(echo -e "${cuisine_item}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+		
+		# Search through the list to find appropriate cuisine id
+		searchResult=$(echo "$cuisines_details" | jq ".cuisines[] | select(.cuisine.cuisine_name | test(\"${cuisine_item}\"; \"i\")) | .cuisine.cuisine_id" | head -n 1)
+		if [[ -n "$searchResult" ]]; then
+			cuisines+="$searchResult,"
+		fi
+	done
+
+	if [[ -z "$cuisines" ]]; then
+		cuisines="*"
+	else
+		# Delete the trailing comma(,)
+		cuisines=${cuisines%,}
+	fi	
 else
 	cuisines="*"
 fi
