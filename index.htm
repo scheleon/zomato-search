@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="centered-form">
+        <div class="centered-form__box">
+            <h1>Search</h1>
+            <form id="search-form" onsubmit="return false">
+                <label>City</label>
+                <input id="city" type="text" name="city" id="city" placeholder="City" required>
+                <label>Cuisines</label>
+                <input id="cuisines" type="text" name="cuisines" id="cuisines">
+                <label>Max for two</label>
+                <input type="number" name="max_for_two" id="max_for_two">
+                <button id="find" type="submit">find</button> 
+            </form>
+        </div>
+    </div>
+
+    <div id="result-box">
+        <div id="result">
+        </div>
+    </div>
+</body>
+
+<script type="application/javascript" src='./script.js' ></script>
+
+</html>
